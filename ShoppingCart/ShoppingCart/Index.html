@@ -34,40 +34,17 @@
             $('#btnSubmit').click(function () {
 
                 var categoryID = $('select[name=selector]').val();
-                console.log('Print CategoryID')
-                console.log(categoryID);
+                //console.log('Print CategoryID')
+                //console.log(categoryID);
+                updateList(categoryID, null, 1);
 
-                $.ajax({
-                    url: '/api/Products/',
-                    method: 'get',
-                    success: function (data) {
-                        for (var i = 0; i < data.length; i++) {
-                            if (i == 0) {
-                                $("#productList").html("");
-                            }
-                            if (categoryID == data[i].CategoryID) {
-                                $('#productList').append(
-                                    `<div class='list-group-item'><div class="row"><div class="col-md-1">`
-                                    + data[i].ProductID + `</div><div class="col-md-1">`
-                                    + data[i].CategoryID + `</div><div class="col-md-2">`
-                                    + data[i].Title + `</div><div class="col-md-1">`
-                                    + data[i].ShortDescription + `</div><div class="col-md-2">`
-                                    + data[i].LongDescription + `</div><div class="col-md-2">`
-                                    + data[i].ImageUrl + `</div><div class="col-md-1">`
-                                    + data[i].Price + `</div><div class="col-md-2"><a data-toggle="modal" data-target="#myModal" onclick="update(`
-                                    + data[i].ProductID + `)">Update</a> | <a onclick="remove(`
-                                    + data[i].ProductID + `)">Delete</a></div></div></div>`
-                                )
-                            }
-                        }
-                    }
-                })
             });
 
             $('#btnSave').click(function () {
 
+                var categoryid = $('select[name=selector]').val();
                 var product = {
-                    CategoryID: $('select[name=selector]').val(), Title: $('#Title').val(), ShortDescription: $('#shortDescription').val(),
+                    CategoryID: categoryid, Title: $('#Title').val(), ShortDescription: $('#shortDescription').val(),
                     LongDescription: $('#longDescription').val(), ImageUrl: $('#imageUrl').val(), Price: $('#Price').val()
                 };
                 console.log(product);
@@ -79,21 +56,91 @@
                     dataType: 'json',
                     data: JSON.stringify(product),
                     success: function (data) {
-                        alert('Save successful');
+                        //alert('Save successful');
+                        updateList(categoryid, null, 1);
                     }
                 });
 
             });
+
+            $('#btnDeleteCat').click(function () {
+
+                var categoryid = $('select[name=selector]').val();
+                console.log("The category I want to delete is");
+                console.log(categoryid);
+
+
+                $.ajax({
+                    url: '/api/Products/',
+                    type: 'get',
+                    success: function (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            if (categoryid == data[i].CategoryID) {
+                                remove(categoryid, data[i].ProductID);
+                            }
+                        }
+                    }
+                })
+
+                $.ajax({
+                    url: '/api/Categories/' + categoryid,
+                    type: 'delete',
+                    success: function (data) {
+                        alert("Category successfully deleted");
+                    }
+
+                })
+                // Loop to find all the products with that id
+                // For each product run another function to delete them from the database
+                // Delete category
+
+
+            });
         });
 
-        function remove( id ) {
+        function updateList(categoryid, productid, type) {
+
             $.ajax({
-                url: '/api/Products/' + id,
+                url: '/api/Products/',
+                method: 'get',
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        if (i == 0) {
+                            $("#productList").html("");
+                        }
+                        if (type == 1 && categoryid == data[i].CategoryID) {
+                            appendData(data[i]);
+                        } else if (type == 2 && categoryid == data[i].CategoryID && productid != data[i].ProductID) {
+                            appendData(data[i]);
+                        }
+                    }
+                }
+            })
+
+        }
+
+        function appendData(data) {
+            $('#productList').append(
+                `<div class='list-group-item'><div class="row"><div class="col-md-1">`
+                + data.ProductID + `</div><div class="col-md-1">`
+                + data.CategoryID + `</div><div class="col-md-2">`
+                + data.Title + `</div><div class="col-md-1">`
+                + data.ShortDescription + `</div><div class="col-md-2">`
+                + data.LongDescription + `</div><div class="col-md-2">`
+                + data.ImageUrl + `</div><div class="col-md-1">`
+                + data.Price + `</div><div class="col-md-2"><a data-toggle="modal" data-target="#myModal" onclick="update(`
+                + data.ProductID + `)">Update</a> | <a onclick="remove(`
+                + data.CategoryID + `,` + data.ProductID + `)">Delete</a></div></div></div>`
+            )
+        }
+
+        function remove(categoryid, productid) {
+            $.ajax({
+                url: '/api/Products/' + productid,
                 type: 'delete',
                 success: function (data) {
-                    alert(id);
-
-                    // Update browser
+                    //alert(id);
+                    updateList(categoryid, productid, 2);
                 }
             });
         }
@@ -116,8 +163,10 @@
 
             $('#btnUpdate').click(function () {
 
+                var categoryid = $('select[name=selector]').val();
+                console.log(categoryid);
                 var product = {
-                    ProductID: id, CategoryID: $('select[name=selector]').val(), Title: $('#mTitle').val(), ShortDescription: $('#mShortDescription').val(),
+                    ProductID: id, CategoryID: categoryid, Title: $('#mTitle').val(), ShortDescription: $('#mShortDescription').val(),
                     LongDescription: $('#mLongDescription').val(), ImageUrl: $('#mImageUrl').val(), Price: $('#mPrice').val()
                 };
 
@@ -128,9 +177,8 @@
                     //dataType: 'json',
                     data: JSON.stringify(product),
                     success: function (response) {
-                        alert("Omg it is working");
-
-                        // update browser
+                        //alert("Omg it is working");
+                        updateList(categoryid, null, 1);
                     }
                 })
 
@@ -144,15 +192,6 @@
 
         }
 
-        $('#btnDeleteCat').click(function () {
-
-            var categoryid = $('select[name=selector]').val();
-
-            // Get the category id
-            // Delete products with that id
-            // Delete category
-
-        })
 
 
     </script>
@@ -286,7 +325,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-primary pull-right" id="btnUpdate">Update</button>
+                        <button class="btn btn-primary pull-right" id="btnUpdate" data-dismiss="modal">Update</button>
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
                     </div>
                 </div>
