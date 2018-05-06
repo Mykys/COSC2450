@@ -22,5 +22,11 @@ namespace ShoppingCart.Models
         public System.Data.Entity.DbSet<ShoppingCart.Models.Category> Categories { get; set; }
 
         public System.Data.Entity.DbSet<ShoppingCart.Models.Product> Products { get; set; }
+
+        public System.Data.Entity.DbSet<ShoppingCart.Models.Cart> Carts { get; set; }
+
+        public System.Data.Entity.DbSet<ShoppingCart.Models.Order> Orders { get; set; }
+
+        public System.Data.Entity.DbSet<ShoppingCart.Models.OrderDetail> OrderDetails { get; set; }
     }
 }
