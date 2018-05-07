@@ -1,0 +1,17 @@
+﻿@model ShoppingCart.Models.Category
+
+@{
+    ViewBag.Title = "Browse";
+}
+
+<h2>Browsing Category: @Model.Title</h2>
+
+<ul>
+    @foreach (var product in Model.Products)
+    {
+        <li>
+            @product.Title
+        </li>
+    }
+</ul>
+
