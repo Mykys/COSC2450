@@ -1,8 +1,35 @@
 ﻿@model ShoppingCart.Models.Product
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Details - " + Model.Title;
 }
 
-<h2>Product: @Model.Title</h2>
+<h2>@Model.Title</h2>
+
+<p>
+    <img alt="@Model.Title" src="@Model.ImageUrl" />
+</p>
+
+<div id="product-details">
+    <p>
+        <em>Category:</em>
+        @Model.CategoryID
+    </p>
+    <p>
+        <em>Short description:</em>
+        @Model.ShortDescription
+    </p
+    <p>
+        <em>Long description:</em>
+        @Model.LongDescription
+    </p>
+    <p>
+        <em>Price:</em>
+        @Model.Price
+    </p>
+    <p class="button">
+        @Html.ActionLink("Add to cart", "AddToCart",
+        "ShopCart", new { id = Model.ProductID }, "")
+    </p>
+</div>
 

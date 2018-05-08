@@ -23,7 +23,7 @@ namespace ShoppingCart.Controllers
         public ActionResult Browse(string category)
         {
             var categoryModel = storeDB.Categories.Include("Products")
-                .Single(c => c.Title == category);
+               .Single(c => c.Title == category);
 
             return View(categoryModel);
         }

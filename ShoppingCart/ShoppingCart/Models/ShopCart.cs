@@ -21,7 +21,7 @@ namespace ShoppingCart.Models
             return cart;
         }
 
-        // Helper method to simplofy shopping cart calls
+        // Helper method to simplify shopping cart calls
         public static ShopCart GetCart(Controller controller)
         {
             return GetCart(controller.HttpContext);
@@ -97,7 +97,7 @@ namespace ShoppingCart.Models
 
         public List<Cart> GetCartItems()
         {
-            return storeDB.Carts.Where(cart => cart.CartID == ShopCartID).ToList();
+            return storeDB.Carts.Include("Product").Where(c => c.CartID == ShopCartID).ToList();
         }
 
         public int GetCount()
