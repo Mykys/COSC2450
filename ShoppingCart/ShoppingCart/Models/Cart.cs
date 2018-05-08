@@ -10,7 +10,7 @@ namespace ShoppingCart.Models
     {
         [Key]
         public int RecordID { get; set; }
-        public int CartID { get; set; }
+        public string CartID { get; set; }
         public int ProductID { get; set; }
         public Product Product { get; set; }
         public int Count { get; set; }

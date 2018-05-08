@@ -22,7 +22,7 @@ namespace ShoppingCart.Controllers
         // GET: /Store/Browse?category=Shoes
         public ActionResult Browse(string category)
         {
-            var categoryModel = storeDB.Categories.Include("Categories")
+            var categoryModel = storeDB.Categories.Include("Products")
                 .Single(c => c.Title == category);
 
             return View(categoryModel);
@@ -31,7 +31,7 @@ namespace ShoppingCart.Controllers
         // GET: /Store/Details/5
         public ActionResult Details(int id)
         {
-            var product = new Product { Title = "Product " + id };
+            var product = storeDB.Products.Find(id);
 
             return View(product);
         }

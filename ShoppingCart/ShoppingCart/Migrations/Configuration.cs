@@ -9,8 +9,7 @@ namespace ShoppingCart.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
-            ContextKey = "ShoppingCart.Models.ShoppingCartContext";
+            AutomaticMigrationsEnabled = false;
         }
 
         protected override void Seed(ShoppingCart.Models.ShoppingCartContext context)
