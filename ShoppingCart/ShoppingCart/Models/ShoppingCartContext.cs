@@ -28,5 +28,7 @@ namespace ShoppingCart.Models
         public System.Data.Entity.DbSet<ShoppingCart.Models.Order> Orders { get; set; }
 
         public System.Data.Entity.DbSet<ShoppingCart.Models.OrderDetail> OrderDetails { get; set; }
+
+        public System.Data.Entity.DbSet<ShoppingCart.ViewModels.ShopCartViewModel> ShopCartViewModels { get; set; }
     }
 }

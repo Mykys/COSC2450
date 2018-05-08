@@ -161,7 +161,7 @@ namespace ShoppingCart.Models
         }
 
         // We're using HttpContextBase to allow access to cookies.
-        public string GetCartId(HttpContextBase context)
+        public string GetCartID(HttpContextBase context)
         {
             if (context.Session[CartSessionKey] == null)
             {
