@@ -9,9 +9,7 @@ namespace ShoppingCart.Models
     public class ShopCart
     {
         ShoppingCartContext storeDB = new ShoppingCartContext();
-
-        public string ShopCartID { get; set; }
-
+        string ShopCartID { get; set; }
         public const string CartSessionKey = "CartID";
 
         public static ShopCart GetCart(HttpContextBase context)
@@ -84,7 +82,7 @@ namespace ShoppingCart.Models
 
         public void EmptyCart()
         {
-            var cartItems = storeDB.Carts.Where(cart => cart.CartID == ShopCartID);
+            var cartItems = storeDB.Carts.Include("Product").Where(cart => cart.CartID == ShopCartID);
 
             foreach (var cartItem in cartItems)
             {

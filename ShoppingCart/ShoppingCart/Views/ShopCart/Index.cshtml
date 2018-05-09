@@ -4,108 +4,175 @@
     ViewBag.Title = "Shopping Cart";
 }
 
-<script src="/Scripts/jquery-1.4.4.min.js" type="text/javascript"></script>
-<script type="text/javascript">
-    $(function () {
-        // Document.ready -> link up remove event handler
-        $(".RemoveLink").click(function () {
-            // Get the id from the link
-            var recordToDelete = $(this).attr("data-id");
+<!DOCTYPE html>
 
-            if (recordToDelete != '') {
+<html>
 
-                // Perform the ajax post
-                $.post("/ShopCart/RemoveFromCart", { "id": recordToDelete },
-                    function (data) {
-                        // Successful requests get here
-                        // Update the page elements
-                        if (data.ItemCount == 0) {
-                            $('#row-' + data.DeleteID).fadeOut('slow');
-                        } else {
-                            $('#item-count-' + data.DeleteID).text(data.ItemCount);
-                        }
+<head>
 
-                        $('#cart-total').text(data.CartTotal);
-                        $('#update-message').text(data.Message);
-                        $('$cart-status').text('Cart (' + data.CartCount + ')');
-                    });
-            }
+      <title>Shopping Cart</title>
+	<meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <script src="~/scripts/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="~/scripts/jquery.simplePagination.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            // Document.ready -> link up remove event handler
+            $(".RemoveLink").click(function () {
+                // Get the id from the link
+                var recordToDelete = $(this).attr("data-id");
+
+                if (recordToDelete != '') {
+
+                    // Perform the ajax post
+                    $.post("/ShopCart/RemoveFromCart", { "id": recordToDelete },
+                        function (data) {
+                            // Successful requests get here
+                            // Update the page elements
+                            if (data.ItemCount == 0) {
+                                $('#row-' + data.DeleteID).fadeOut('slow');
+                            } else {
+                                $('#item-count-' + data.DeleteID).text(data.ItemCount);
+                            }
+
+                            $('#cart-total').text(data.CartTotal);
+                            $('#update-message').text(data.Message);
+                            $('$cart-status').text('Cart (' + data.CartCount + ')');
+                        });
+                }
+            });
         });
-    });
 
-    //function handleUpdate() {
-    //    // Load and deserialize the returned JSON data
-    //    var json = context.get_data();
-    //    var data = Sys.Serialization.JavaScriptSerializer.deserialize(json);
+        //function handleUpdate() {
+        //    // Load and deserialize the returned JSON data
+        //    var json = context.get_data();
+        //    var data = Sys.Serialization.JavaScriptSerializer.deserialize(json);
 
-    //    // Update the page elements
-    //    if (data.ItemCount == 0) {
-    //        $('#row-' + data.DeleteID).fadeOut('slow');
-    //    } else {
-    //        $('#item-count-' + data.DeleteID).text(data.ItemCount);
-    //    }
+        //    // Update the page elements
+        //    if (data.ItemCount == 0) {
+        //        $('#row-' + data.DeleteID).fadeOut('slow');
+        //    } else {
+        //        $('#item-count-' + data.DeleteID).text(data.ItemCount);
+        //    }
 
-    //    $('#cart-total').text(data.CartTotal);
-    //    $('#update-message').text(data.Message);
-    //    $('$cart-status').text('Cart (' + data.CartCount + ')');
-    //}
-</script>
+        //    $('#cart-total').text(data.CartTotal);
+        //    $('#update-message').text(data.Message);
+        //    $('$cart-status').text('Cart (' + data.CartCount + ')');
+        //}
 
-<h3>
-    <em>Review</em> your cart:
-</h3>
+        //$jQuery(function ($) {
 
-<p class="button">
-    @Html.ActionLink("Checkout >>", "AddressAndPayment", "Checkout")
-</p>
+        //    var items = $("#content");
 
-<div id="update-message">
+        //    var numItems = items.length;
+        //    var perPage = 2;
 
-</div>
+        //    // Only show the first 2 items initially
+        //    items.slice(perPage).hide();
 
-<table class="table">
-    <tr>
-        <th>
-            Product Name
-        </th>
-        <th>
-            Price (each)
-        </th>
-        <th>
-            Quantity
-        </th>
-        <th></th>
-    </tr>
-    @foreach (var item in Model.CartItems)
-    {
-        <tr id="row-@item.RecordID">
+        //    // Now setup the pagination using the '#pagination' div.
+        //    $("#pagination").pagination({
+        //        items: numItems,
+        //        itemsOnpge: perPage,
+        //        cssStyle: "light-theme",
+
+        //        // This is the actual page changing functionality
+        //        onPageClick: function (pageNumber) {
+        //            // We need to show and hide 'tr's appropriately
+        //            var showFrom = perPage * (pageNumber - 1);
+        //            var showTo = showFrom + perPage;
+
+        //            // WE'll first hide everything...
+        //            items.hide()
+        //                // ... and then only show the appropirate rows
+        //                .slice(showFrom, showTo).show();
+        //        }
+        //    });
+        //});
+
+        //$('#pagination-demo').twbsPagination({
+        //    totalPages: 35,
+        //    visiblePages: 7,
+        //    onPageClick: function (event, page) {
+        //        $('#page-content').text('Page ' + page);
+        //    }
+        //});
+    </script>
+
+</head>
+
+<body>
+    <h3>
+        <em>Review</em> your cart:
+    </h3>
+
+
+
+    <p class="button">
+        @Html.ActionLink("Checkout >>", "AddressAndPayment", "Checkout")
+    </p>
+
+    <div id="update-message">
+
+    </div>
+
+    <div id="pagination"></div>
+    <table class="table" id="content">
+        <tr>
+            <th>
+                Product Name
+            </th>
+            <th>
+                Price (each)
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th></th>
+        </tr>
+        @foreach (var item in Model.CartItems)
+        {
+            <tr id="row-@item.RecordID">
+                <td>
+                    @*@Html.ActionLink(item.Product.Title, "Details", "Store", new { id = item.ProductID}, null)*@
+                    @item.Product.Title
+                </td>
+                <td>
+                    @item.Product.Price
+                </td>
+                <td id="item-count-@item.RecordID">
+                    @item.Count
+                </td>
+                <td>
+                    <a href="#" class="RemoveLink" data-id="@item.RecordID">Remove from cart</a>
+                </td>
+            </tr>
+        }
+        <tr>
             <td>
-               @*@Html.ActionLink(item.Product.Title, "Details", "Store", new { id = item.ProductID}, null)*@
-                @item.Product.Title
+                Total
             </td>
-            <td>
-                @item.Product.Price
-            </td>
-            <td id="item-count-@item.RecordID">
-                @item.Count
-            </td>
-            <td>
-                <a href="#" class="RemoveLink" data-id="@item.RecordID">Remove from cart</a>
+            <td></td>
+            <td></td>
+            <td id="cart-total">
+                @Model.CartTotal
             </td>
         </tr>
-    }
-    <tr>
-        <td>
-            Total
-        </td>
-        <td>
-            1
-        </td>
-        <td>
-            1
-        </td>
-        <td id="cart-total">
-            @Model.CartTotal
-        </td>
-    </tr>
-</table>
+    </table>
+
+    @*<ul id="pagination-demo" class="pagination-sm"></ul>*@
+
+
+    @*<ul class="pagination" id="pagination-demo">
+            <li><a href="#">1</a></li>
+            <li class="active"><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>
+        </ul>*@
+
+</body>
+
+</html>
