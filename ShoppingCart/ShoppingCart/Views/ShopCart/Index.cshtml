@@ -10,7 +10,7 @@
 
 <head>
 
-      <title>Shopping Cart</title>
+    <title>Shopping Cart</title>
 	<meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -18,18 +18,22 @@
     <script src="~/scripts/jquery-1.10.2.min.js" type="text/javascript"></script>
     <script src="~/scripts/jquery.simplePagination.js"></script>
     <script type="text/javascript">
-        $(function () {
-            // Document.ready -> link up remove event handler
+
+        $(document).ready(function () {
+
             $(".RemoveLink").click(function () {
+
                 // Get the id from the link
                 var recordToDelete = $(this).attr("data-id");
 
                 if (recordToDelete != '') {
 
-                    // Perform the ajax post
-                    $.post("/ShopCart/RemoveFromCart", { "id": recordToDelete },
-                        function (data) {
-                            // Successful requests get here
+                    $.ajax({
+                        url: '/ShopCart/RemoveFromCart/' + recordToDelete,
+                        method: 'post',
+                        contentType: 'application/json',
+                        dataType: 'json',
+                        success: function (data) {
                             // Update the page elements
                             if (data.ItemCount == 0) {
                                 $('#row-' + data.DeleteID).fadeOut('slow');
@@ -40,7 +44,8 @@
                             $('#cart-total').text(data.CartTotal);
                             $('#update-message').text(data.Message);
                             $('$cart-status').text('Cart (' + data.CartCount + ')');
-                        });
+                        }
+                    })
                 }
             });
         });
@@ -69,36 +74,7 @@
         //    var numItems = items.length;
         //    var perPage = 2;
 
-        //    // Only show the first 2 items initially
-        //    items.slice(perPage).hide();
 
-        //    // Now setup the pagination using the '#pagination' div.
-        //    $("#pagination").pagination({
-        //        items: numItems,
-        //        itemsOnpge: perPage,
-        //        cssStyle: "light-theme",
-
-        //        // This is the actual page changing functionality
-        //        onPageClick: function (pageNumber) {
-        //            // We need to show and hide 'tr's appropriately
-        //            var showFrom = perPage * (pageNumber - 1);
-        //            var showTo = showFrom + perPage;
-
-        //            // WE'll first hide everything...
-        //            items.hide()
-        //                // ... and then only show the appropirate rows
-        //                .slice(showFrom, showTo).show();
-        //        }
-        //    });
-        //});
-
-        //$('#pagination-demo').twbsPagination({
-        //    totalPages: 35,
-        //    visiblePages: 7,
-        //    onPageClick: function (event, page) {
-        //        $('#page-content').text('Page ' + page);
-        //    }
-        //});
     </script>
 
 </head>
