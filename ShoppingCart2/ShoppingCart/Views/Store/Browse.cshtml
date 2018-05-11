@@ -1,0 +1,33 @@
+﻿@model ShoppingCart.Models.Category
+
+@{
+    ViewBag.Title = "Browse";
+}
+
+@*<h2>Browsing Category: @Model.Title</h2>*@
+
+@*<ul>
+    @foreach (var product in model.products)
+    {
+        <li>
+            @html.actionlink(product.title, "details", new { id = product.productid })
+        </li>
+    }
+</ul>*@
+
+
+<div class="genre">
+    <h3><em>@Model.Title</em> Products</h3>
+
+    <ul id="album-list">
+        @foreach (var product in Model.Products)
+        {
+            <li>
+                <a href="@Url.Action("Details", new { id = product.ProductID })">
+                    <img alt="@product.Title" src="@product.ImageUrl" />
+                    <span>@product.Title</span>
+                </a>
+            </li>
+        }
+    </ul>
+</div>

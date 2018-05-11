@@ -1,0 +1,13 @@
+﻿@model IEnumerable<ShoppingCart.Models.Category>
+
+<ul id="menu">
+
+    @foreach (var category in Model)
+    {
+        <li>@Html.ActionLink(category.Title,
+           "Browse", "Store",
+           new { Category = category.Title }, null)
+    </li>
+
+    }
+</ul>
