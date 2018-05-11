@@ -36,12 +36,19 @@ namespace ShoppingCart.Controllers
             return View(product);
         }
 
-        // GET: /Store/GenreMenu
+        // GET: /Store/CategoryeMenu
         [ChildActionOnly]
         public ActionResult CategoryMenu()
         {
             var categories = storeDB.Categories.ToList();
             return PartialView(categories);
         }
+
+        //// GET: /Store/QuantityBox
+        //public ActionResult QuantityBox(FormCollection value)
+        //{
+        //    string val = value["PromoCode"].ToString();
+        //    return val;
+        //}
     }
 }

@@ -4,6 +4,11 @@
     ViewBag.Title = "Details - " + Model.Title;
 }
 
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"
+        type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"
+        type="text/javascript"></script>
+
 <h2>@Model.Title</h2>
 
 <p>
@@ -27,8 +32,30 @@
         <em>Price:</em>
         @Model.Price
     </p>
+
+
+    @using (Html.BeginForm())
+    {
+        <fieldset>
+            <legend>Payment</legend>
+            <p>
+                We're running a promotion: all music is free
+                with the promo code: "FREE"
+            </p>
+            <div class="editor-label">
+                @Html.Label("Quantity")
+            </div>
+            <div class="editor-field">
+                @Html.TextBox("PromoCode")
+            </div>
+        </fieldset>
+
+        <input type="submit" value="Submit Order" />
+    }
+
     <p class="button">
         @Html.ActionLink("Add to cart", "AddToCart",
-        "ShopCart", new { id = Model.ProductID }, "")
+        "ShopCart", new { id = Model.ProductID, values = 2 }, "")
     </p>
+
 </div>
