@@ -44,11 +44,11 @@ namespace ShoppingCart.Controllers
             return PartialView(categories);
         }
 
-        //// GET: /Store/QuantityBox
-        //public ActionResult QuantityBox(FormCollection value)
+        // GET: /Store/Details
+        //public ActionResult Details(FormCollection value)
         //{
         //    string val = value["PromoCode"].ToString();
-        //    return val;
+        //    return View(val);
         //}
     }
 }

@@ -170,8 +170,10 @@
                     LongDescription: $('#mLongDescription').val(), ImageUrl: $('#mImageUrl').val(), Price: $('#mPrice').val()
                 };
 
+                console.log(product);
+
                 $.ajax({
-                    url: 'http://localhost:62855/api/Products/' + id,
+                    url: '/api/Products/' + id,
                     method: 'put',
                     contentType: 'application/json',
                     //dataType: 'json',

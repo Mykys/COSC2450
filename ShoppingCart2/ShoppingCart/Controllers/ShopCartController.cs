@@ -28,7 +28,24 @@ namespace ShoppingCart.Controllers
             return View(viewModel);
         }
 
-        // GET: /Store/AddToCart/5
+        //// GET: /Store/AddToCart/5
+        //public ActionResult AddToCart(int id, FormCollection values)
+        //{
+        //    // Retrieve the album from the database
+        //    var addedProduct = storeDB.Products
+        //        .Single(product => product.ProductID == id);
+
+        //    // Add it to the shopping cart
+        //    var cart = ShopCart.GetCart(this.HttpContext);
+
+        //    // Go back to the main store page for more shopping
+        //    cart.AddToCart(addedProduct);
+        //    return RedirectToAction("Index");
+            
+        //}
+
+        // POST: /Store/AddToCart/5
+        [HttpPost]
         public ActionResult AddToCart(int id, FormCollection values)
         {
             // Retrieve the album from the database
@@ -38,23 +55,15 @@ namespace ShoppingCart.Controllers
             // Add it to the shopping cart
             var cart = ShopCart.GetCart(this.HttpContext);
 
-            try
+            int quantity = Int32.Parse(values["Quantity"]);
+            for (int i = 0; i < quantity; i++)
             {
-                int quantity = Int32.Parse(values["PromoCode"]);
-                for (int i = 0; i < quantity; i++)
-                {
-                    cart.AddToCart(addedProduct);
-                }
-
-                // Go back to the main store page for more shopping
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                // Go back to the main store page for more shopping
                 cart.AddToCart(addedProduct);
-                return RedirectToAction("Index");
             }
+
+            // Go back to the main store page for more shopping
+            return RedirectToAction("Index");
+            
         }
 
         // AJAX: /ShopCart/RemoveFromCart/5

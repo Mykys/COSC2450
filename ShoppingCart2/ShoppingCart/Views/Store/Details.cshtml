@@ -33,8 +33,7 @@
         @Model.Price
     </p>
 
-
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("AddToCart", "ShopCart", new { id = Model.ProductID }, FormMethod.Post))
     {
         <fieldset>
             <legend>Payment</legend>
@@ -42,20 +41,13 @@
                 We're running a promotion: all music is free
                 with the promo code: "FREE"
             </p>
-            <div class="editor-label">
+            <div class="form-group">
                 @Html.Label("Quantity")
+                @Html.TextBox("Quantity", "1", new { @Class = "form-control" })
             </div>
-            <div class="editor-field">
-                @Html.TextBox("PromoCode")
-            </div>
+            
         </fieldset>
 
-        <input type="submit" value="Submit Order" />
+        <button class="btn btn-primary" type="submit">Add to cart</button>
     }
-
-    <p class="button">
-        @Html.ActionLink("Add to cart", "AddToCart",
-        "ShopCart", new { id = Model.ProductID, values = 2 }, "")
-    </p>
-
 </div>
