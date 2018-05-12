@@ -1,13 +1,46 @@
-﻿@model int?
+﻿@model ShoppingCart.ViewModels.ShopCartViewModel
 
 @{
     ViewBag.Title = "Checkout Complete";
 }
 
 <h2>Checkout Complete</h2>
-<p>Thanks for your order! Your order number is: @Model</p>
+@*<p>Thanks for your order! Your order number is: @Model</p>
 <p>
     How about shopping for some more music in our
     @Html.ActionLink("store","Index", "Home")
-</p>
+</p>*@
 
+<table class="table" id="content">
+    <tr>
+        <th>
+            Product Name
+        </th>
+        <th>
+            Quantity
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model.CartItems)
+    {
+        <tr id="row-@item.RecordID">
+            <td>
+                @item.Product.Title
+            </td>
+            <td id="item-count-@item.RecordID">
+                @item.Count
+            </td>
+            <td>
+            </td>
+        </tr>
+    }
+    <tr>
+        <td>
+            Total
+        </td>
+        <td></td>
+        <td id="cart-total">
+            @Model.CartTotal
+        </td>
+    </tr>
+</table>

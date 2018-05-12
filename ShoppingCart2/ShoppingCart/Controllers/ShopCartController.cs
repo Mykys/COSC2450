@@ -61,6 +61,7 @@ namespace ShoppingCart.Controllers
                 cart.AddToCart(addedProduct);
             }
 
+            // NOT WORKING!
             // Go back to the main store page for more shopping
             return RedirectToAction("Index");
             

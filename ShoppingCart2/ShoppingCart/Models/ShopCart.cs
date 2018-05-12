@@ -152,7 +152,7 @@ namespace ShoppingCart.Models
             storeDB.SaveChanges();
 
             // Empty the shopping cart
-            EmptyCart();
+            //EmptyCart();
 
             // Return the OrderID as the confirmation number
             return order.OrderID;

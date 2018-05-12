@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ShoppingCart.Models;
+using ShoppingCart.ViewModels;
 
 namespace ShoppingCart.Controllers
 {
@@ -45,8 +46,7 @@ namespace ShoppingCart.Controllers
                     var cart = ShopCart.GetCart(this.HttpContext);
                     cart.CreateOrder(order);
 
-                    return RedirectToAction("Complete",
-                        new { id = order.OrderID });
+                    return RedirectToAction("Complete");
                 }
                
             }
@@ -58,21 +58,39 @@ namespace ShoppingCart.Controllers
         }
 
         // GET: /Checkout/Complete
-        public ActionResult Complete(int id)
+        public ActionResult Complete()
         {
-            // Validate customer owns this order
-            bool isValid = storeDB.Orders.Any(
-                o => o.OrderID == id &&
-                o.Username == User.Identity.Name);
+            // Get ordered items from id
+            // Return the View with order
 
-            if (isValid)
+            var cart = ShopCart.GetCart(this.HttpContext);
+
+            // Set up our ViewModel
+            var viewModel = new ShopCartViewModel
             {
-                return View(id);
-            }
-            else
-            {
-                return View("Error");
-            }
+                CartItems = cart.GetCartItems(),
+                CartTotal = cart.GetTotal()
+            };
+
+            return View(viewModel);
         }
+
+        // GET: /Checkout/Complete
+        //public ActionResult Complete(int id)
+        //{
+        //    // Validate customer owns this order
+        //    bool isValid = storeDB.Orders.Any(
+        //        o => o.OrderID == id &&
+        //        o.Username == User.Identity.Name);
+
+        //    if (isValid)
+        //    {
+        //        return View(id);
+        //    }
+        //    else
+        //    {
+        //        return View("Error");
+        //    }
+        //}
     }
 }
