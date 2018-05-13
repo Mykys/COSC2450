@@ -2,50 +2,66 @@
 
 @{
     ViewBag.Title = "Shopping Cart";
+    int page_size = 4;
+    int pages = (int) (Math.Ceiling((double) Model.CartItems.Count / page_size));
 }
 
-<!DOCTYPE html>
+@section scripts {
+<script src="~/Scripts/jquery.twbsPagination-1.3.1.min.js"></script>    
 
-<html>
-
-<head>
-
-    <title>Shopping Cart</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <script type="text/javascript">
-
-        $(document).ready(function () {
-
-            $(".RemoveLink").click(function () {
-
-                // Get the id from the link
-                var recordToDelete = $(this).attr("data-id");
-
-                if (recordToDelete != '') {
-
-                    $.ajax({
-                        url: '/ShopCart/RemoveFromCart/' + recordToDelete,
-                        method: 'post',
-                        contentType: 'application/json',
-                        dataType: 'json',
-                        success: function (data) {
-                            // Update the page elements
-                            if (data.ItemCount == 0) {
-                                $('#row-' + data.DeleteID).fadeOut('slow');
-                            } else {
-                                $('#item-count-' + data.DeleteID).text(data.ItemCount);
-                            }
-
-                            $('#cart-total').text(data.CartTotal);
-                            $('#update-message').text(data.Message);
-                            $('$cart-status').text('Cart (' + data.CartCount + ')');
-                        }
-                    })
-                }
-            });
+<script type="text/javascript">
+    $(function () {
+        window.pagObj = $('#pagination').twbsPagination({
+            totalPages: @pages,
+            visiblePages: 10,
+            onPageClick: function (event, page) {
+                var start_index = (page - 1) * @page_size;
+                var end_index = start_index + @page_size;
+                end_index = (end_index > (@Model.CartItems.Count)) ? (@Model.CartItems.Count) : end_index;
+                console.info(page + ' (from options)');
+                console.info("Showing item " + start_index);
+                console.info("Until " + end_index)
+                
+                $(".product").addClass("hidden")
+                $(".product").slice(start_index, end_index).removeClass("hidden")
+                $("#pageInfo").text("Showing " + (start_index + 1) + "-" + (end_index) + " of @Model.CartItems.Count");
+            }
         });
+    });
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $(".RemoveLink").click(function () {
+
+            // Get the id from the link
+            var recordToDelete = $(this).attr("data-id");
+
+            if (recordToDelete != '') {
+
+                $.ajax({
+                    url: '/ShopCart/RemoveFromCart/' + recordToDelete,
+                    method: 'post',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    success: function (data) {
+                        // Update the page elements
+                        if (data.ItemCount == 0) {
+                            $('#row-' + data.DeleteID).fadeOut('slow');
+                        } else {
+                            $('#item-count-' + data.DeleteID).text(data.ItemCount);
+                        }
+
+                        $('#cart-total').text(data.CartTotal);
+                        $('#update-message').text(data.Message);
+                        $('$cart-status').text('Cart (' + data.CartCount + ')');
+                    }
+                })
+            }
+        });
+    });
 
         //function handleUpdate() {
         //    // Load and deserialize the returned JSON data
@@ -72,26 +88,21 @@
         //    var perPage = 2;
 
 
-    </script>
+</script>
 
-</head>
+}
 
-<body>
+
     <h3>
         <em>Review</em> your cart:
     </h3>
 
-
-
     <p class="button">
         @Html.ActionLink("Checkout >>", "AddressAndPayment", "Checkout")
     </p>
-
     <div id="update-message">
-
     </div>
 
-    @*<div id="pagination"></div>*@
     <table class="table" id="content">
         <tr>
             <th>
@@ -107,9 +118,8 @@
         </tr>
         @foreach (var item in Model.CartItems)
         {
-            <tr id="row-@item.RecordID">
+            <tr class="product" id="row-@item.RecordID">
                 <td>
-                    @*@Html.ActionLink(item.Product.Title, "Details", "Store", new { id = item.ProductID}, null)*@
                     @item.Product.Title
                 </td>
                 <td>
@@ -135,17 +145,10 @@
         </tr>
     </table>
 
-    @*<ul id="pagination-demo" class="pagination-sm"></ul>*@
-
-
-    @*<ul class="pagination" id="pagination-demo">
-            <li><a href="#">1</a></li>
-            <li class="active"><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#">5</a></li>
-        </ul>*@
-
-</body>
-
-</html>
+    <div class="container">
+        <p id="pageInfo"></p>
+        <nav aria-label="Page navigation">
+            <ul class="pagination" id="pagination"></ul>
+        </nav>
+    </div>
+   
