@@ -21,41 +21,61 @@ namespace ShoppingCart.Controllers
             return View();
         }
 
-        // POST: /Checkout/AddressAndPayment
+        // POST: /Checkout/ADdressAndPayment
         [HttpPost]
         public ActionResult AddressAndPayment(FormCollection values)
         {
             var order = new Order();
             TryUpdateModel(order);
 
-            try
-            {
-                if (string.Equals(values["PromoCode"], PromoCode,
-                    StringComparison.OrdinalIgnoreCase) == false)
-                {
-                    return View(order);
-                }
-                else
-                {
-                    order.Username = User.Identity.Name;
+            order.Username = User.Identity.Name;
 
-                    // Save Order
-                    storeDB.Orders.Add(order);
-                    storeDB.SaveChanges();
-                    // Process the order
-                    var cart = ShopCart.GetCart(this.HttpContext);
-                    cart.CreateOrder(order);
+            // Save Order
+            storeDB.Orders.Add(order);
+            storeDB.SaveChanges();
+            // Process the order
+            var cart = ShopCart.GetCart(this.HttpContext);
 
-                    return RedirectToAction("Complete");
-                }
-               
-            }
-            catch
-            {
-                // Invalid - redisplay with errors
-                return View(order);
-            }
+            return RedirectToAction("Complete");
+
+
         }
+
+        //// POST: /Checkout/AddressAndPayment
+        //[HttpPost]
+        //public ActionResult AddressAndPayment(FormCollection values)
+        //{
+        //    var order = new Order();
+        //    TryUpdateModel(order);
+
+        //    try
+        //    {
+        //        if (string.Equals(values["PromoCode"], PromoCode,
+        //            StringComparison.OrdinalIgnoreCase) == false)
+        //        {
+        //            return View(order);
+        //        }
+        //        else
+        //        {
+        //            order.Username = User.Identity.Name;
+
+        //            // Save Order
+        //            storeDB.Orders.Add(order);
+        //            storeDB.SaveChanges();
+        //            // Process the order
+        //            var cart = ShopCart.GetCart(this.HttpContext);
+        //            cart.CreateOrder(order);
+
+        //            return RedirectToAction("Complete");
+        //        }
+               
+        //    }
+        //    catch
+        //    {
+        //        // Invalid - redisplay with errors
+        //        return View(order);
+        //    }
+        //}
 
         // GET: /Checkout/Complete
         public ActionResult Complete()

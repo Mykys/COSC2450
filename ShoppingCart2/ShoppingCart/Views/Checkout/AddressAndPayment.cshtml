@@ -1,7 +1,9 @@
 ﻿@model ShoppingCart.Models.Order
+
 @{
     ViewBag.Title = "Address And Payment";
 }
+
 @Scripts.Render("~/bundles/jqueryval")
 @Scripts.Render("~/bundles/jquerycreditcardval")
 
@@ -11,11 +13,11 @@
         //card validation on input fields
         $('.input-card-details').on('keyup', function () {
             if (cardFormValidate()) {
-                console.log('Working');
+                //alert('Working');
                 $("#submitButton").prop('disabled', false);
             } else {
-                console.log('Not working');
-                $("#submitButton").prop('disabled', true);
+                //alert('Not working');
+                $("submitButton").prop('disabled', true);
             }
         });
     });
@@ -24,15 +26,15 @@
         var cardValid = 0;
 
         //card number validation
-        $('#card_number').validateCreditCard(function (result) {
+        $('#card_number').validateCreditCard(function(result) {
             if (result.valid) {
                 $("#card_number").removeClass('required');
                 cardValid = 1;
-                //console.log('CN valid');
+                console.log("CN valid");
             } else {
                 $("#card_number").addClass('required');
                 cardValid = 0;
-                //console.log('CN not valid');
+                console.log("CN not valid");
             }
         });
 
@@ -46,57 +48,58 @@
         var regYear = /^2017|2018|2019|2020|2021|2022|2023|2024|2025|2026|2027|2028|2029|2030|2031$/;
         var regCVV = /^[0-9]{3,3}$/;
 
-        if (cardValid == 0) {
-            $("#card_number").addClass('required');
-            $("#card_number").focus();
-            return false;
-            console.log('Card number not valid');
-        } else if (!regMonth.test(expMonth)) {
-            $("#card_number").removeClass('required');
-            $("#expiry_month").addClass('required');
-            $("#expiry_month").focus();
-            return false;
+            if (cardValid == 0) {
+                $("#card_number").addClass('required');
+                $("#card_number").focus();
+                return false;
 
-        } else if (!regYear.test(expYear)) {
-            $("#card_number").removeClass('required');
-            $("#expiry_month").removeClass('required');
-            $("#expiry_year").addClass('required');
-            $("#expiry_year").focus();
-            return false;
+            } else if (!regMonth.test(expMonth)) {
+                $("#card_number").removeClass('required');
+                $("#expiry_month").addClass('required');
+                $("#expiry_month").focus();
+                return false;
 
-        } else if (!regCVV.test(cvv)) {
-            $("#card_number").removeClass('required');
-            $("#expiry_month").removeClass('required');
-            $("#expiry_year").removeClass('required');
-            $("#cvv").addClass('required');
-            $("#cvv").focus();
-            return false;
+            } else if (!regYear.test(expYear)) {
+                $("#card_number").removeClass('required');
+                $("#expiry_month").removeClass('required');
+                $("#expiry_year").addClass('required');
+                $("#expiry_year").focus();
+                return false;
 
-        } else if (!regName.test(cardName)) {
-            $("#card_number").removeClass('required');
-            $("#expiry_month").removeClass('required');
-            $("#expiry_year").removeClass('required');
-            $("#cvv").removeClass('required');
-            $("#name_on_card").addClass('required');
-            $("#name_on_card").focus();
-            return false;
+            } else if (!regCVV.test(cvv)) {
+                $("#card_number").removeClass('required');
+                $("#expiry_month").removeClass('required');
+                $("#expiry_year").removeClass('required');
+                $("#cvv").addClass('required');
+                $("#cvv").focus();
+                return false;
 
-        } else {
-            $("#card_number").removeClass('required');
-            $("#expiry_month").removeClass('required');
-            $("#expiry_year").removeClass('required');
-            $("#cvv").removeClass('required');
-            $("#name_on_card").removeClass('required');
-            return true;
-        }
+            } else if (!regName.test(cardName)) {
+                $("#card_number").removeClass('required');
+                $("#expiry_month").removeClass('required');
+                $("#expiry_year").removeClass('required');
+                $("#cvv").removeClass('required');
+                $("#name_on_card").addClass('required');
+                $("#name_on_card").focus();
+                return false;
+
+            } else {
+                $("#card_number").removeClass('required');
+                $("#expiry_month").removeClass('required');
+                $("#expiry_year").removeClass('required');
+                $("#cvv").removeClass('required');
+                $("#name_on_card").removeClass('required');
+                return true;
+            }
     }
 </script>
 
 <style>
     .required {
-        background-color: #ffb9b9
+        background-color: #ffb9b9;
     }
 </style>
+
 
 @using (Html.BeginForm())
 {
@@ -107,20 +110,11 @@
         @Html.EditorForModel(new { htmlAttributes = new { @class = "form-control" } })
     </fieldset>
 
+    <h2></h2>
     <fieldset>
-        <legend>Promo code</legend>
-        <p>
-            We're running a promotion: all music is free
-            with the promo code: "FREE"
-        </p>
-        <div class="form-group">
-            @Html.Label("Promo Code")
-            @Html.TextBox("PromoCode", "", new { @Class = "form-control", @Placeholder = "Promo code" })
-        </div>
-        </fieldset>
-        <fieldset>
-            <legend>Payment</legend>
-
+        
+        <legend>Payment</legend>
+        
         <div class="form-group">
             @Html.Label("Card number")
             @Html.TextBox("card_number", "", new { @Class = "form-control input-card-details", @Id = "card_number", @Placeholder = "4012 8888 8888 1881" })
@@ -139,12 +133,12 @@
         </div>
         <div class="form-group">
             @Html.Label("Name on card")
-            @Html.TextBox("name_on_card", "", new { @Class = "form-control input-card-details", @Id = "name_on_card"})
+            @Html.TextBox("name_on_card", "", new { @Class = "form-control input-card-details", @Id = "name_on_card" })
         </div>
 
-
-    </fieldset>
+        </fieldset>
 
     <input type="submit" class="btn btn-primary" id="submitButton" disabled="disabled" value="Send order" />
 }
+
 

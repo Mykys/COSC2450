@@ -1,18 +1,18 @@
-﻿
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>jQuery Credit Card Validator Example</title>
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jquerycreditcardval")
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="Scripts/jquery.creditCardValidator.js"></script>
 </head>
 <body>
     <label>CC number <input></label>
+
     <p class="log"></p>
 </body>
+
 <script>
     $(function() {
         $('input').validateCreditCard(function(result) {
