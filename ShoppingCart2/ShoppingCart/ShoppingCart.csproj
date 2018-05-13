@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -214,6 +215,7 @@
     <Compile Include="Controllers\CheckoutController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ManageProductsController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\ShopCartController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
@@ -262,6 +264,8 @@
     <Content Include="Scripts\jquery-2.0.0.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.creditCardValidator.js" />
+    <Content Include="Scripts\jquery.twbsPagination-1.3.1.js" />
+    <Content Include="Scripts\jquery.twbsPagination-1.3.1.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -312,6 +316,7 @@
     <Content Include="Views\Checkout\Complete.cshtml" />
     <Content Include="Views\ShopCart\CartSummary.cshtml" />
     <Content Include="Views\Store\CategoryMenu.cshtml" />
+    <Content Include="Views\ManageProducts\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
