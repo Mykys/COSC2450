@@ -38,8 +38,8 @@
                     console.info("Showing item " + start_index);
                     console.info("Until " + end_index)
 
-                    $(".product").addClass("hidden")
-                    $(".product").slice(start_index, end_index).removeClass("hidden")
+                    $(".product:not(.deleted)").addClass("hidden")
+                    $(".product:not(.deleted)").slice(start_index, end_index).removeClass("hidden")
 
                     if (num_products > 0) {
                         $("#pageInfo").show();
