@@ -35,9 +35,9 @@
 
         $('#btnReset').click(function () {
             $('#Title').val(" ");
-            $('#ShortDescription').val(" ");
-            $('#LongDescription').val(" ");
-            $('#ImageUrl').val(" ");
+            $('#shortDescription').val(" ");
+            $('#longDescription').val(" ");
+            $('#imageUrl').val(" ");
             $('#Price').val(" ");
         });
 
@@ -143,9 +143,9 @@
             `<tr><td>` + data.ProductID +
             `</td><td>` + data.CategoryID +
             `</td><td>` + data.Title +
-            `</td><td>` + data.shortDescription +
-            `</td><td>` + data.longDescription +
-            `</td><td>` + data.imageUrl +
+            `</td><td>` + data.ShortDescription +
+            `</td><td>` + data.LongDescription +
+            `</td><td>` + data.ImageUrl +
             `</td><td>` + data.Price +
             `</td><td> <a data-toggle="modal" data-target="#myModal" onclick= "update(`+ data.ProductID + `)">Update</a> | <a onclick= "remove(` + data.CategoryID + `,` + data.ProductID + `)" >Delete</a></td></tr>`
         )
