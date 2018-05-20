@@ -1,4 +1,4 @@
-﻿@model ShoppingCart.ViewModels.ShopCartViewModel
+﻿@model ShoppingCart.ViewModels.OrderViewModel
 
 @{
     ViewBag.Title = "Checkout Complete";
@@ -21,14 +21,14 @@
         </th>
         <th></th>
     </tr>
-    @foreach (var item in Model.CartItems)
+    @foreach (var item in Model.OrderDetails)
     {
-        <tr id="row-@item.RecordID">
+        <tr id="row-@item.OrderDetailID">
             <td>
                 @item.Product.Title
             </td>
-            <td id="item-count-@item.RecordID">
-                @item.Count
+            <td id="item-count-@item.OrderDetailID">
+                @item.Quantity
             </td>
             <td>
             </td>

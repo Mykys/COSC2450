@@ -127,6 +127,7 @@ namespace ShoppingCart.Models
             double orderTotal = 0;
 
             var cartItems = GetCartItems();
+            //order.OrderDetails = new List<OrderDetail>();
 
             // Iterate over the items in the cart, adding the order details for each
             foreach (var item in cartItems)
@@ -136,13 +137,15 @@ namespace ShoppingCart.Models
                     OrderID = order.OrderID,
                     ProductID = item.ProductID,
                     Quantity = item.Count,
-                    UnitPrice = item.Product.Price
+                    UnitPrice = item.Product.Price,
+                    Product = item.Product
                 };
 
                 // Set the order total of the shopping cart
                 orderTotal += (item.Count * item.Product.Price);
 
                 storeDB.OrderDetails.Add(orderDetail);
+                //order.OrderDetails.Add(orderDetail);
             }
 
             // Set the order's total to the orderTotal count
@@ -152,10 +155,15 @@ namespace ShoppingCart.Models
             storeDB.SaveChanges();
 
             // Empty the shopping cart
-            //EmptyCart();
+            EmptyCart();
 
             // Return the OrderID as the confirmation number
             return order.OrderID;
+        }
+
+        public List<OrderDetail> GetOrderDetails(int orderId)
+        {
+            return storeDB.OrderDetails.Where(o => o.OrderID == orderId).ToList();
         }
 
         // We're using HttpContextBase to allow access to cookies.
