@@ -34,6 +34,8 @@
 
     $(document).ready(function () {
 
+        handleUpdate();
+
         $(".RemoveLink").click(function () {
 
             // Get the id from the link
@@ -61,24 +63,26 @@
                 })
             }
         });
+
+        function handleUpdate() {
+            // Load and deserialize the returned JSON data
+            var json = context.get_data();
+            var data = Sys.Serialization.JavaScriptSerializer.deserialize(json);
+
+            // Update the page elements
+            if (data.ItemCount == 0) {
+                $('#row-' + data.DeleteID).fadeOut('slow');
+            } else {
+                $('#item-count-' + data.DeleteID).text(data.ItemCount);
+            }
+
+            $('#cart-total').text(data.CartTotal);
+            $('#update-message').text(data.Message);
+            $('$cart-status').text('Cart (' + data.CartCount + ')');
+        }
     });
 
-        //function handleUpdate() {
-        //    // Load and deserialize the returned JSON data
-        //    var json = context.get_data();
-        //    var data = Sys.Serialization.JavaScriptSerializer.deserialize(json);
 
-        //    // Update the page elements
-        //    if (data.ItemCount == 0) {
-        //        $('#row-' + data.DeleteID).fadeOut('slow');
-        //    } else {
-        //        $('#item-count-' + data.DeleteID).text(data.ItemCount);
-        //    }
-
-        //    $('#cart-total').text(data.CartTotal);
-        //    $('#update-message').text(data.Message);
-        //    $('$cart-status').text('Cart (' + data.CartCount + ')');
-        //}
 
         //$jQuery(function ($) {
 

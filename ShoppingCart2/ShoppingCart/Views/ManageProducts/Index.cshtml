@@ -9,18 +9,9 @@
 <script>
     $(document).ready(function () {
 
-        // Core topic: how to query our web api
-        $.ajax({
-            url: '/api/Categories/',
-            method: 'get',
-            success: function (data) {
-                for (var i = 0; i < data.length; i++) {
-                    console.log(data[i].Title);
-                    $('#shoppingList').append('<option value="' + data[i].CategoryID + '">' + data[i].Title + '</option>');
-                }
-            }
-        })
+        updateCategoryMenu();
 
+        // Create new category
         $("#createNewCategoryBtn").click(function () {
             var title = $("#categoryName").val();
             if (title.length > 0) {
@@ -34,7 +25,6 @@
                     dataType: 'json',
                     data: JSON.stringify(category),
                     success: function (data) {
-                        console.log(data);
                         $("#categoryName").val("");
                         $('#shoppingList').append('<option value="' + data.CategoryID + '">' + data.Title + '</option>');
                     }
@@ -43,24 +33,19 @@
             
         });
 
+        // Fetch products from selected category
         $('#btnSubmit').click(function () {
-
             var categoryID = $('select[name=selector]').val();
-            //console.log('Print CategoryID')
-            //console.log(categoryID);
             updateList(categoryID, null, 1);
-
         });
 
+        // Add new product
         $('#btnSave').click(function () {
-
             var categoryid = $('select[name=selector]').val();
             var product = {
                 CategoryID: categoryid, Title: $('#Title').val(), ShortDescription: $('#shortDescription').val(),
                 LongDescription: $('#longDescription').val(), ImageUrl: $('#imageUrl').val(), Price: $('#Price').val()
             };
-            console.log(product);
-
             $.ajax({
                 url: '/api/Products',
                 method: 'post',
@@ -68,99 +53,113 @@
                 dataType: 'json',
                 data: JSON.stringify(product),
                 success: function (data) {
-                    //alert('Save successful');
                     updateList(categoryid, null, 1);
                 }
             });
-
         });
 
+        // Delete selected category and all products in selected category
         $('#btnDeleteCat').click(function () {
+            if (confirm("Are you sure you want to delete category?")) {
+                var categoryid = $('select[name=selector]').val();
 
-            var categoryid = $('select[name=selector]').val();
-            console.log("The category I want to delete is");
-            console.log(categoryid);
-
-
-            $.ajax({
-                url: '/api/Products/',
-                type: 'get',
-                success: function (data) {
-                    for (var i = 0; i < data.length; i++) {
-                        if (categoryid == data[i].CategoryID) {
-                            remove(categoryid, data[i].ProductID);
+                // Delete all products in category
+                $.ajax({
+                    url: '/api/Products/',
+                    type: 'get',
+                    success: function (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            if (categoryid == data[i].CategoryID) {
+                                remove(categoryid, data[i].ProductID);
+                                updateList(categoryid, data[i].ProductID, 2);
+                            }
                         }
                     }
-                }
-            })
+                })
 
-            $.ajax({
-                url: '/api/Categories/' + categoryid,
-                type: 'delete',
-                success: function (data) {
-                    alert("Category successfully deleted");
-                }
-
-            })
-            // Loop to find all the products with that id
-            // For each product run another function to delete them from the database
-            // Delete category
-
-
+                // Delete category
+                $.ajax({
+                    url: '/api/Categories/' + categoryid,
+                    type: 'delete',
+                    success: function (data) {
+                        updateCategoryMenu();
+                    }
+                })
+            }
         });
     });
 
-    function updateList(categoryid, productid, type) {
+    // Fetch categories into dropdown menu
+    function updateCategoryMenu() {
+        $.ajax({
+            url: '/api/Categories/',
+            method: 'get',
+            success: function (data) {
+                $('#shoppingList').empty();
+                $('#shoppingList').append('<option value=""></option>');
+                for (var i = 0; i < data.length; i++) {
+                    $('#shoppingList').append('<option value="' + data[i].CategoryID + '">' + data[i].Title + '</option>');
+                }
+            }
+        })
+    }
 
+    // Update product list
+    function updateList(categoryid, productid, type) {
         $.ajax({
             url: '/api/Products/',
             method: 'get',
             success: function (data) {
                 for (var i = 0; i < data.length; i++) {
+
+                    // Reset table before displaying new products
                     if (i == 0) {
                         $("#productList").html("");
                     }
+                    // Update products from selected category and after adding new product
                     if (type == 1 && categoryid == data[i].CategoryID) {
                         appendData(data[i]);
+
+                    // Update list after removing a product
                     } else if (type == 2 && categoryid == data[i].CategoryID && productid != data[i].ProductID) {
                         appendData(data[i]);
                     }
                 }
             }
         })
-
     }
 
+    // Append data into table REWRITE THIS PART
     function appendData(data) {
         $('#productList').append(
-            `<div class='list-group-item'><div class="row"><div class="col-md-1">`
-            + data.ProductID + `</div><div class="col-md-1">`
-            + data.CategoryID + `</div><div class="col-md-2">`
-            + data.Title + `</div><div class="col-md-1">`
-            + data.ShortDescription + `</div><div class="col-md-2">`
-            + data.LongDescription + `</div><div class="col-md-2">`
-            + data.ImageUrl + `</div><div class="col-md-1">`
-            + data.Price + `</div><div class="col-md-2"><a data-toggle="modal" data-target="#myModal" onclick="update(`
-            + data.ProductID + `)">Update</a> | <a onclick="remove(`
-            + data.CategoryID + `,` + data.ProductID + `)">Delete</a></div></div></div>`
+            `<tr><td>` + data.ProductID +
+            `</td><td>` + data.CategoryID +
+            `</td><td>` + data.Title +
+            `</td><td>` + data.shortDescription +
+            `</td><td>` + data.longDescription +
+            `</td><td>` + data.imageUrl +
+            `</td><td>` + data.Price +
+            `</td><td> <a data-toggle="modal" data-target="#myModal" onclick= "update(`+ data.ProductID + `)">Update</a> | <a onclick= "remove(` + data.CategoryID + `,` + data.ProductID + `)" >Delete</a></td></tr>`
         )
     }
 
+    // Remove selected product
     function remove(categoryid, productid) {
-        $.ajax({
-            url: '/api/Products/' + productid,
-            type: 'delete',
-            success: function (data) {
-                //alert(id);
-                updateList(categoryid, productid, 2);
-            }
-        });
+        if (confirm("Are you sure you want to delete product?")) {
+            $.ajax({
+                url: '/api/Products/' + productid,
+                type: 'delete',
+                success: function (data) {
+                    updateList(categoryid, productid, 2);
+                }
+            });
+        }
     }
 
-
+    // Update product
     function update(id) {
-        //alert(id);
 
+        // Display current data of the product the user wants to update
         $.ajax({
             url: '/api/Products/' + id,
             method: 'get',
@@ -173,38 +172,26 @@
             }
         })
 
+        // Update the product list with the updated product details
         $('#btnUpdate').click(function () {
-
             var categoryid = $('select[name=selector]').val();
-            console.log(categoryid);
             var product = {
                 ProductID: id, CategoryID: categoryid, Title: $('#mTitle').val(), ShortDescription: $('#mShortDescription').val(),
                 LongDescription: $('#mLongDescription').val(), ImageUrl: $('#mImageUrl').val(), Price: $('#mPrice').val()
             };
-
-            console.log(product);
-
             $.ajax({
                 url: '/api/Products/' + id,
                 method: 'put',
                 contentType: 'application/json',
-                //dataType: 'json',
                 data: JSON.stringify(product),
                 success: function (response) {
-                    //alert("Omg it is working");
                     updateList(categoryid, null, 1);
                 }
             })
-
         })
+    }
 
-
-        // Find the product with the right id
-        // get the data and put into the modal fields
-        // When update button clicks, update database
-
-
-    }</script>
+</script>
 
 <div class="container" style="width:1200px;">
 
@@ -267,24 +254,27 @@
     </div>
     <div class="row">
         <div class="col-md-12">
+
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-md-1 my-col">Product ID</div>
-                        <div class="col-md-1 my-col">Category ID</div>
-                        <div class="col-md-2 my-col">Title</div>
-                        <div class="col-md-1 my-col">Short description</div>
-                        <div class="col-md-2 my-col">Long description</div>
-                        <div class="col-md-2 my-col">Image url</div>
-                        <div class="col-md-1 my-col">Price</div>
-                        <div class="col-md-2 my-col">Action</div>
-                    </div>
-                </div>
-                <div class="panel-body" id="productList">
-                </div>
+                <table class="table table-hover panel panel-default">
+                        <thead class="panel-heading">
+                            <tr>
+                                <th>Product ID</th>
+                                <th>Category ID</th>
+                                <th>Title</th>
+                                <th>Short description</th>
+                                <th>Long description</th>
+                                <th>Image url</th>
+                                <th>Price</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="panel-body" id="productList"></tbody>
+                </table>
             </div>
         </div>
     </div>
+
     <!-- Modal -->
     <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">

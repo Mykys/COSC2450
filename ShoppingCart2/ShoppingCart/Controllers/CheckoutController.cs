@@ -35,6 +35,7 @@ namespace ShoppingCart.Controllers
             storeDB.SaveChanges();
             // Process the order
             var cart = ShopCart.GetCart(this.HttpContext);
+            cart.CreateOrder(order);
 
             return RedirectToAction("Complete");
 
