@@ -45,6 +45,7 @@
                         $("#pageInfo").show();
                     } else {
                         $("#pageInfo").hide();
+                        $("#checkoutButton").hide();
                     }
 
                     updatePageNumber(page);
@@ -52,6 +53,7 @@
             });
         } else {
             $("#pageInfo").hide();
+            $("#checkoutButton").hide();
         }
     }
 
@@ -98,30 +100,6 @@
         });
     });
 
-        //function handleUpdate() {
-        //    // Load and deserialize the returned JSON data
-        //    var json = context.get_data();
-        //    var data = Sys.Serialization.JavaScriptSerializer.deserialize(json);
-
-        //    // Update the page elements
-        //    if (data.ItemCount == 0) {
-        //        $('#row-' + data.DeleteID).fadeOut('slow');
-        //    } else {
-        //        $('#item-count-' + data.DeleteID).text(data.ItemCount);
-        //    }
-
-        //    $('#cart-total').text(data.CartTotal);
-        //    $('#update-message').text(data.Message);
-        //    $('$cart-status').text('Cart (' + data.CartCount + ')');
-        //}
-
-        //$jQuery(function ($) {
-
-        //    var items = $("#content");
-
-        //    var numItems = items.length;
-        //    var perPage = 2;
-
 
     </script>
 
@@ -132,7 +110,7 @@
     <em>Review</em> your cart:
 </h3>
 
-<p class="button">
+<p class="button" id="checkoutButton">
     @Html.ActionLink("Checkout >>", "AddressAndPayment", "Checkout")
 </p>
 <div id="update-message">
